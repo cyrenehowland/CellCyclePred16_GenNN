@@ -371,19 +371,6 @@ double time_since_last_division(Cell* pCell)
 
     return current_time - last_division_time;
 }
-//
-//void update_time_spent_attached(Cell* pCell, double dt)
-//{
-//    // Increment the time spent attached if the cell is attached
-//    if (pCell->state.number_of_attached_cells() > 0)
-//    {
-//        pCell->custom_data["time_spent_attached"] += dt;
-//    }
-//    else
-//    {
-//        pCell->custom_data["time_spent_attached"] = 0.0;
-//    }
-//}
 
 
 
@@ -425,9 +412,14 @@ void evaluate_death_conditions(Cell* pCell, Phenotype& phenotype, double dt){
 
 void prey_phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
 {
-    // If you are attached to others, label 'inedible'
+    
+    // Calculate time since last division
+    pCell->custom_data["time_since_last_division"] = time_since_last_division(pCell);
+    
     if (pCell->state.number_of_attached_cells() > 0){
+        // If you are attached to others, label 'inedible'
         pCell -> custom_data["edible"] = false;
+        // Update time spent attached
         pCell->custom_data["time_spent_attached"] += dt;
         
     }
@@ -436,12 +428,6 @@ void prey_phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
         pCell->custom_data["time_spent_attached"] = 0.0;
     }
     
-        
-    // Calculate time since last division
-    pCell->custom_data["time_since_last_division"] = time_since_last_division(pCell);
-    
-    // Update time spent attached
-//    update_time_spent_attached(pCell, dt);
 
     // Neural Network processing
     auto inputs = get_cell_inputs(pCell);
@@ -459,14 +445,12 @@ void prey_phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
 //        std::cout << output << " ";
 //    }
 //    std::cout << std::endl;
-//    
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     
-//    // Interpret outputs and update custom data:
-//    // - if the [] element of the outputs array is greater than 0.5, expression -> 1.0, else -> 0.0
+    // Interpret outputs and update custom data:
     pCell->custom_data["separate"] = (outputs[0] > 0.5) ? 1.0 : 0.0;
     pCell->custom_data["divide"] = (outputs[1] > 0.5) ? 1.0 : 0.0;
-//    
+
     
     // Division
     if (pCell->custom_data["divide"] == 1.0) {
@@ -482,6 +466,9 @@ void prey_phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
             pCell->remove_all_attached_cells();
             pCell->remove_all_spring_attachments();
             
+//            pCell->custom_data["last_division_time"] = PhysiCell_globals.current_time;
+   
+//            pCell->custom_data["time_spent_attached"] = 0.0;
             
             // Cast the intracellular model to NeuralNetworkIntracellular
             NeuralNetworkIntracellular* nn_model = static_cast<NeuralNetworkIntracellular*>(pCell->phenotype.intracellular);
@@ -490,13 +477,11 @@ void prey_phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
             // mutate(double mutation_rate, double weight_mutation_prob, double step_size)
             nn_model->mutate(1.0, 0.2, 0.1);  // Adjust mutation parameters as needed
 
-            // Record division time
-            pCell->custom_data["last_division_time"] = PhysiCell_globals.current_time;
-
-          
-//            pCell->divide();  // Now division occurs with the mutated neural network
+            // Flag for division
             pCell-> phenotype.flagged_for_division = true;
-
+            
+//            // Record division time (roughly)
+//            pCell->custom_data["last_division_time"] = PhysiCell_globals.current_time;
         }
     }else{pCell->phenotype.motility.is_motile = true;}
     
@@ -505,8 +490,6 @@ void prey_phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
     if (pCell->custom_data["separate"] == 1.0){
         // Remove attachments
         pCell -> remove_all_attached_cells();
-        
-        
     }
 
     
@@ -606,8 +589,16 @@ void prey_stress_function(Cell* pCell, Phenotype& phenotype, double dt) {
 
 void custom_division_function( Cell* pCell1, Cell* pCell2 )
 {
+    // Record division time (roughly)
+    pCell1->custom_data["last_division_time"] = PhysiCell_globals.current_time;
+    pCell2->custom_data["last_division_time"] = PhysiCell_globals.current_time;
+
 
     attach_cells(pCell1, pCell2);
+    
+    pCell1->custom_data["edible"] = 0.0;
+    pCell2->custom_data["edible"] = 0.0;
+    
 
     double initial_volume_1 = pCell1->custom_data["initial_volume"];
     double current_volume_1 = pCell1 ->phenotype.volume.total;
@@ -636,7 +627,6 @@ void contact_function( Cell* pMe, Phenotype& phenoMe , Cell* pOther, Phenotype& 
 //// *********************************************************************************************
 //
 void pred_phenotype_function( Cell* pCell, Phenotype& phenotype, double dt ){
-    
     
     
     // Hunt and eat prey cells (and increase energy)

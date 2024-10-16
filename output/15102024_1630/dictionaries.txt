@@ -1,0 +1,100 @@
+Signals: 
+=======
+0 : food
+1 : intracellular food
+2 : food gradient
+3 : pressure
+4 : volume
+5 : contact with Cell
+6 : contact with Predator
+7 : contact with live cell
+8 : contact with dead cell
+9 : contact with apoptotic cell
+10 : contact with necrotic cell
+11 : contact with other dead cell
+12 : contact with basement membrane
+13 : damage
+14 : damage delivered
+15 : attacking
+16 : dead
+17 : total attack time
+18 : time
+19 : custom:sample
+20 : custom:divide
+21 : custom:edible
+22 : custom:energy
+23 : custom:separate
+24 : custom:initial_volume
+25 : custom:metabolic_rate
+26 : custom:pred_stress
+27 : custom:danger
+28 : custom:prey_ingest_prob
+29 : custom:last_division_time
+30 : custom:time_since_last_division
+31 : custom:attachment_loss_time
+32 : custom:time_spent_attached
+33 : apoptotic
+34 : necrotic
+
+Behaviors: 
+=========
+0 : food secretion
+1 : food secretion target
+2 : food uptake
+3 : food export
+4 : cycle entry
+5 : exit from cycle phase 1
+6 : exit from cycle phase 2
+7 : exit from cycle phase 3
+8 : exit from cycle phase 4
+9 : exit from cycle phase 5
+10 : apoptosis
+11 : necrosis
+12 : migration speed
+13 : migration bias
+14 : migration persistence time
+15 : chemotactic response to food
+16 : cell-cell adhesion
+17 : cell-cell adhesion elastic constant
+18 : adhesive affinity to Cell
+19 : adhesive affinity to Predator
+20 : relative maximum adhesion distance
+21 : cell-cell repulsion
+22 : cell-BM adhesion
+23 : cell-BM repulsion
+24 : phagocytose apoptotic cell
+25 : phagocytose necrotic cell
+26 : phagocytose other dead cell
+27 : phagocytose Cell
+28 : phagocytose Predator
+29 : attack Cell
+30 : attack Predator
+31 : fuse to Cell
+32 : fuse to Predator
+33 : transform to Cell
+34 : transform to Predator
+35 : custom:sample
+36 : custom:divide
+37 : custom:edible
+38 : custom:energy
+39 : custom:separate
+40 : custom:initial_volume
+41 : custom:metabolic_rate
+42 : custom:pred_stress
+43 : custom:danger
+44 : custom:prey_ingest_prob
+45 : custom:last_division_time
+46 : custom:time_since_last_division
+47 : custom:attachment_loss_time
+48 : custom:time_spent_attached
+49 : is_movable
+50 : immunogenicity to Cell
+51 : immunogenicity to Predator
+52 : cell attachment rate
+53 : cell detachment rate
+54 : maximum number of cell attachments
+55 : attack damage rate
+56 : attack duration
+57 : damage rate
+58 : damage repair rate
+
