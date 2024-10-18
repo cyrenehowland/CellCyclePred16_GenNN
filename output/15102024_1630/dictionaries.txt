@@ -25,16 +25,17 @@ Signals:
 22 : custom:energy
 23 : custom:separate
 24 : custom:initial_volume
-25 : custom:metabolic_rate
-26 : custom:pred_stress
-27 : custom:danger
-28 : custom:prey_ingest_prob
-29 : custom:last_division_time
-30 : custom:time_since_last_division
-31 : custom:attachment_loss_time
-32 : custom:time_spent_attached
-33 : apoptotic
-34 : necrotic
+25 : custom:pred_stress
+26 : custom:danger
+27 : custom:prey_ingest_prob
+28 : custom:last_division_time
+29 : custom:time_since_last_division
+30 : custom:attachment_loss_time
+31 : custom:time_spent_attached
+32 : custom:active_metabolic_rate
+33 : custom:inactive_metabolic_rate
+34 : apoptotic
+35 : necrotic
 
 Behaviors: 
 =========
@@ -79,22 +80,23 @@ Behaviors:
 38 : custom:energy
 39 : custom:separate
 40 : custom:initial_volume
-41 : custom:metabolic_rate
-42 : custom:pred_stress
-43 : custom:danger
-44 : custom:prey_ingest_prob
-45 : custom:last_division_time
-46 : custom:time_since_last_division
-47 : custom:attachment_loss_time
-48 : custom:time_spent_attached
-49 : is_movable
-50 : immunogenicity to Cell
-51 : immunogenicity to Predator
-52 : cell attachment rate
-53 : cell detachment rate
-54 : maximum number of cell attachments
-55 : attack damage rate
-56 : attack duration
-57 : damage rate
-58 : damage repair rate
+41 : custom:pred_stress
+42 : custom:danger
+43 : custom:prey_ingest_prob
+44 : custom:last_division_time
+45 : custom:time_since_last_division
+46 : custom:attachment_loss_time
+47 : custom:time_spent_attached
+48 : custom:active_metabolic_rate
+49 : custom:inactive_metabolic_rate
+50 : is_movable
+51 : immunogenicity to Cell
+52 : immunogenicity to Predator
+53 : cell attachment rate
+54 : cell detachment rate
+55 : maximum number of cell attachments
+56 : attack damage rate
+57 : attack duration
+58 : damage rate
+59 : damage repair rate
 

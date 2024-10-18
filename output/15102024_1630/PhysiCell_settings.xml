@@ -23,17 +23,17 @@
     </overall>
 
     <parallel>
-        <omp_num_threads>4</omp_num_threads>
+        <omp_num_threads>6</omp_num_threads>
     </parallel>
 
     <save>
         <folder>user_projects/CellCyclePred16_GenNN/output/15102024_1630</folder>
         <full_data>
-            <interval units="min">1</interval>
+            <interval units="min">10</interval>
             <enable>true</enable>
         </full_data>
         <SVG>
-            <interval units="min">1</interval>
+            <interval units="min">10</interval>
             <enable>true</enable>
             <plot_substrate enabled="false" limits="false">
                 <substrate>food</substrate>
@@ -214,7 +214,6 @@
                 <energy conserved="true" units="" description="">0.0</energy>
                 <separate conserved="false" units="" description="">0.0</separate>
                 <initial_volume conserved="false" units="" description="">0.0</initial_volume>
-                <metabolic_rate conserved="false" units="" description="">0.0025</metabolic_rate>
                 <pred_stress conserved="false" units="" description="">0.0</pred_stress>
                 <danger conserved="false" units="" description="">0.0</danger>
                 <prey_ingest_prob conserved="false" units="" description="">0.0</prey_ingest_prob>
@@ -222,6 +221,8 @@
                 <time_since_last_division conserved="false" units="" description="">0.0</time_since_last_division>
                 <attachment_loss_time conserved="false" units="" description="">0.0</attachment_loss_time>
                 <time_spent_attached conserved="false" units="" description="">0.0</time_spent_attached>
+                <active_metabolic_rate conserved="false" units="" description="">0.0025</active_metabolic_rate>
+                <inactive_metabolic_rate conserved="false" units="" description="">0.001</inactive_metabolic_rate>
             </custom_data>
         </cell_definition>
         <cell_definition name="Predator" ID="1">
@@ -348,7 +349,6 @@
                 <energy conserved="true" units="" description="">0.0</energy>
                 <separate conserved="false" units="" description="">0.0</separate>
                 <initial_volume conserved="false" units="" description="">0.0</initial_volume>
-                <metabolic_rate conserved="false" units="" description="">0.0015</metabolic_rate>
                 <pred_stress conserved="false" units="" description="">0.0</pred_stress>
                 <danger conserved="false" units="" description="">0.0</danger>
                 <prey_ingest_prob conserved="false" units="" description="">0.05</prey_ingest_prob>
@@ -356,6 +356,8 @@
                 <time_since_last_division conserved="false" units="" description="">0.0</time_since_last_division>
                 <attachment_loss_time conserved="false" units="" description="">0.0</attachment_loss_time>
                 <time_spent_attached conserved="false" units="" description="">0.0</time_spent_attached>
+                <active_metabolic_rate conserved="false" units="" description="">0.0015</active_metabolic_rate>
+                <inactive_metabolic_rate conserved="false" units="" description="">0.0</inactive_metabolic_rate>
             </custom_data>
         </cell_definition>
     </cell_definitions>

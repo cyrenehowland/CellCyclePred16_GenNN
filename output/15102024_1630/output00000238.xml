@@ -26,10 +26,10 @@
 			<user />
 		</software>
 		<citation />
-		<current_time units="min">237.960000</current_time>
-		<current_runtime units="sec">10.105230</current_runtime>
-		<created>2024-10-16T15:25:23Z</created>
-		<last_modified>2024-10-16T15:25:23Z</last_modified>
+		<current_time units="min">2379.950000</current_time>
+		<current_runtime units="sec">160.212374</current_runtime>
+		<created>2024-10-17T12:00:05Z</created>
+		<last_modified>2024-10-17T12:00:05Z</last_modified>
 	</metadata>
 	<microenvironment>
 		<domain name="microenvironment">
@@ -146,14 +146,15 @@
 							<label index="94" size="1" units="">energy</label>
 							<label index="95" size="1" units="">separate</label>
 							<label index="96" size="1" units="">initial_volume</label>
-							<label index="97" size="1" units="">metabolic_rate</label>
-							<label index="98" size="1" units="">pred_stress</label>
-							<label index="99" size="1" units="">danger</label>
-							<label index="100" size="1" units="">prey_ingest_prob</label>
-							<label index="101" size="1" units="">last_division_time</label>
-							<label index="102" size="1" units="">time_since_last_division</label>
-							<label index="103" size="1" units="">attachment_loss_time</label>
-							<label index="104" size="1" units="">time_spent_attached</label>
+							<label index="97" size="1" units="">pred_stress</label>
+							<label index="98" size="1" units="">danger</label>
+							<label index="99" size="1" units="">prey_ingest_prob</label>
+							<label index="100" size="1" units="">last_division_time</label>
+							<label index="101" size="1" units="">time_since_last_division</label>
+							<label index="102" size="1" units="">attachment_loss_time</label>
+							<label index="103" size="1" units="">time_spent_attached</label>
+							<label index="104" size="1" units="">active_metabolic_rate</label>
+							<label index="105" size="1" units="">inactive_metabolic_rate</label>
 						</labels>
 						<filename>output00000238_cells.mat</filename>
 					</simplified_data>

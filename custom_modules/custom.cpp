@@ -150,7 +150,7 @@ void create_cell_types( void )
     pPreyDef->functions.update_phenotype = prey_phenotype_function;
 //    pPreyDef->phenotype.mechanics.attachment_elastic_constant = parameters.doubles("attachment_elastic_constant");
     pPreyDef->functions.contact_function = standard_elastic_contact_function;
-    pPreyDef -> functions.volume_update_function = prey_growth_and_metabolism;
+//    pPreyDef -> functions.volume_update_function = prey_growth_and_metabolism;
     pPreyDef -> functions.cell_division_function = custom_division_function;
 
 
@@ -272,7 +272,7 @@ std::vector<double> get_cell_inputs(Cell* cell) {
     inputs.push_back(volume_multiple);
     inputs.push_back(hill_energy);
 //    inputs.push_back(cell->custom_data["danger"]);
-    inputs.push_back(cell->custom_data["pred_stress"]);
+//    inputs.push_back(cell->custom_data["pred_stress"]);
     inputs.push_back(cell -> custom_data["time_since_last_division"]);
 //    inputs.push_back(cell -> custom_data["time_spent_attached"]);
     
@@ -348,7 +348,7 @@ void setup_tissue( void )
             
             // Initilaize cell properties:
             prey_initialize_properties(cell);
-            initialize_cell_network((cell), 5, 11, 2); // Example sizes: 3 inputs, 5 hidden neurons, 2 outputs
+            initialize_cell_network((cell), 4, 11, 2); // Example sizes: 3 inputs, 5 hidden neurons, 2 outputs
         }
     
         
@@ -456,6 +456,10 @@ void prey_phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
     if (pCell->custom_data["divide"] == 1.0) {
         // Disable motility
         pCell->phenotype.motility.is_motile = false;
+        // Evaluate metabolism based on inactivity
+        inactive_prey_growth_and_metabolism(pCell, phenotype, dt);
+        
+        //Inactive metebolic rate
 
         // Check if the cell has reached the size threshold for division
         double initial_volume = pCell->custom_data["initial_volume"];
@@ -466,10 +470,6 @@ void prey_phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
             pCell->remove_all_attached_cells();
             pCell->remove_all_spring_attachments();
             
-//            pCell->custom_data["last_division_time"] = PhysiCell_globals.current_time;
-   
-//            pCell->custom_data["time_spent_attached"] = 0.0;
-            
             // Cast the intracellular model to NeuralNetworkIntracellular
             NeuralNetworkIntracellular* nn_model = static_cast<NeuralNetworkIntracellular*>(pCell->phenotype.intracellular);
 
@@ -479,11 +479,12 @@ void prey_phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
 
             // Flag for division
             pCell-> phenotype.flagged_for_division = true;
-            
-//            // Record division time (roughly)
-//            pCell->custom_data["last_division_time"] = PhysiCell_globals.current_time;
+
         }
-    }else{pCell->phenotype.motility.is_motile = true;}
+    }else{
+        pCell->phenotype.motility.is_motile = true;
+        active_prey_growth_and_metabolism(pCell, phenotype,dt);
+    }
     
     
     // Seperation
@@ -501,10 +502,17 @@ void prey_phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
     
     return; }
  
+void inactive_prey_growth_and_metabolism(Cell* pCell, Phenotype& phenotype, double dt)
+{
+    // Update Energy:
+    // No food consumption or growth posible but lower metabolic rate
+    static double metabolic_rate = pCell -> custom_data["inactive_metabolic_rate"];
+    pCell->custom_data["energy"] /= (1.0 + dt*metabolic_rate);
+    
+}
 
 
-
-void prey_growth_and_metabolism(Cell* pCell, Phenotype& phenotype, double dt)
+void active_prey_growth_and_metabolism(Cell* pCell, Phenotype& phenotype, double dt)
 {
     // Access index for food
     int food_index = microenvironment.find_density_index("food");
@@ -525,7 +533,7 @@ void prey_growth_and_metabolism(Cell* pCell, Phenotype& phenotype, double dt)
     // Cell gains energy equivalent to food consumption
     pCell->custom_data["energy"] += food_eaten; // Cell gains energy equivalent to food consumption
     // Update energy based on metabolism
-    static double metabolic_rate = pCell -> custom_data["metabolic_rate"];
+    static double metabolic_rate = pCell -> custom_data["active_metabolic_rate"];
     pCell->custom_data["energy"] /= (1.0 + dt*metabolic_rate);
     
     // Update the microenvironment:

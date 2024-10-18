@@ -118,6 +118,103 @@ void add_random_substrate_to_voxel()
 }
 
 
+void add_linear_gradient_substrate()
+{
+    // Find the index for the new nutrient source (e.g., "food")
+    int idx_food = microenvironment.find_density_index("food");
+
+    // Get the size of the microenvironment mesh
+    int num_voxels = microenvironment.number_of_voxels();
+
+    // Define the maximum concentration at the corner (0,0,0)
+    double max_concentration = 200.0;  // Adjust this value as needed
+
+    // Define the distance scale for the gradient (larger values make the gradient more gradual)
+    double distance_scale = 500.0;  // Adjust to control how quickly the gradient decreases
+
+    // Loop through all the voxels and set a gradient from the origin
+    for (int n = 0; n < num_voxels; n++)
+    {
+        // Get the center coordinates of the voxel
+        std::vector<double> voxel_center = microenvironment.mesh.voxels[n].center;
+        double x = voxel_center[0];
+        double y = voxel_center[1];
+        double z = voxel_center[2];
+
+        // Calculate distance from the origin (0,0,0)
+        double distance_from_origin = sqrt(x * x + y * y + z * z);
+
+        // Calculate the concentration based on the linear gradient
+        double concentration = max_concentration * (1.0 - (distance_from_origin / distance_scale));
+
+        // Ensure the concentration is non-negative
+        if (concentration < 0.0)
+        {
+            concentration = 0.0;
+        }
+
+        // Update the microenvironment with the calculated concentration using a Dirichlet node
+        microenvironment.update_dirichlet_node(n, idx_food, concentration);
+    }
+}
+
+void toggle_sunlight_gradient(double current_time, double sunlight_on_duration, double sunlight_off_duration)
+{
+    // Find the index for the "sunlight" substrate
+    int idx_sunlight = microenvironment.find_density_index("food");
+
+    // Calculate the current cycle duration (on + off period)
+    double cycle_duration = sunlight_on_duration + sunlight_off_duration;
+
+    // Determine the phase of the cycle (on or off)
+    double time_in_cycle = fmod(current_time, cycle_duration);
+
+    // If time_in_cycle is within the 'on' duration, apply the gradient
+    if (time_in_cycle < sunlight_on_duration)
+    {
+        // Define the maximum concentration at the corner (0,0,0)
+        double max_concentration = 10.0;  // Adjust this value as needed
+
+        // Define the distance scale for the gradient (larger values make the gradient more gradual)
+        double distance_scale = 500.0;  // Adjust to control how quickly the gradient decreases
+
+        // Apply the gradient as before
+        int num_voxels = microenvironment.number_of_voxels();
+        for (int n = 0; n < num_voxels; n++)
+        {
+            std::vector<double> voxel_center = microenvironment.mesh.voxels[n].center;
+            double x = voxel_center[0];
+            double y = voxel_center[1];
+            double z = voxel_center[2];
+
+            // Calculate distance from the origin (0,0,0)
+            double distance_from_origin = sqrt(x * x + y * y + z * z);
+
+            // Calculate the concentration based on the linear gradient
+            double concentration = max_concentration * (1.0 - (distance_from_origin / distance_scale));
+
+            // Ensure the concentration is non-negative
+            if (concentration < 0.0)
+            {
+                concentration = 0.0;
+            }
+
+            // Update the microenvironment with the calculated concentration using a Dirichlet node
+            microenvironment.update_dirichlet_node(n, idx_sunlight, concentration);
+        }
+    }
+    else
+    {
+
+        // If time_in_cycle is in the 'off' phase, set the sunlight concentration to zero
+        int num_voxels = microenvironment.number_of_voxels();
+        for (int n = 0; n < num_voxels; n++)
+        {
+            microenvironment.update_dirichlet_node(n, idx_sunlight, 0.0);
+        }
+    }
+}
+
 int main( int argc, char* argv[] )
 {
 	// load and parse settings file(s)
@@ -249,14 +346,19 @@ int main( int argc, char* argv[] )
 
 			// update the microenvironment
 			microenvironment.simulate_diffusion_decay( diffusion_dt );
+            
+            toggle_sunlight_gradient(PhysiCell_globals.current_time, 200, 300);
+
 			
             // Add food randomly into arena periodically
-            if( fabs(fmod(PhysiCell_globals.current_time, 200.0)) < 1e-2 )
-            {
+//            if( fabs(fmod(PhysiCell_globals.current_time, 200.0)) < 1e-2 )
+//            {
                 // Periodically add substrate to voxels
-                add_random_substrate_to_voxel();
-                std::cout << std::endl << "Substrate Added " << std::endl;
-            }
+//                add_random_substrate_to_voxel();
+                //add_linear_gradient_substrate();
+//                toggle_sunlight_gradient(PhysiCell_globals.current_time, 100, 200);
+//                std::cout << std::endl << "Substrate Added " << std::endl;
+//            }
             
 			// run PhysiCell
 			((Cell_Container *)microenvironment.agent_container)->update_all_cells( PhysiCell_globals.current_time );

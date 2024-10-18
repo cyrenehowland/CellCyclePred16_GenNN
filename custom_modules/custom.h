@@ -87,7 +87,9 @@ std::vector<std::string> my_coloring_function( Cell* );
 // custom functions can go here 
 
 void prey_phenotype_function( Cell* pCell, Phenotype& phenotype, double dt );
-void prey_growth_and_metabolism(Cell* pCell, Phenotype& phenotype, double dt);
+void active_prey_growth_and_metabolism(Cell* pCell, Phenotype& phenotype, double dt);
+void inactive_prey_growth_and_metabolism(Cell* pCell, Phenotype& phenotype, double dt);
+
 void prey_stress_function(Cell* pCell, Phenotype& phenotype, double dt);
 //bool phase0_arrest_function(Cell* pCell, Phenotype& phenotype, double dt);
 //bool phase1_arrest_function(Cell* pCell, Phenotype& phenotype, double dt);
