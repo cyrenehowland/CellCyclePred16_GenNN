@@ -173,10 +173,10 @@ void toggle_sunlight_gradient(double current_time, double sunlight_on_duration, 
     if (time_in_cycle < sunlight_on_duration)
     {
         // Define the maximum concentration at the corner (0,0,0)
-        double max_concentration = 10.0;  // Adjust this value as needed
+        double max_concentration = 4.5;  // Adjust this value as needed
 
         // Define the distance scale for the gradient (larger values make the gradient more gradual)
-        double distance_scale = 500.0;  // Adjust to control how quickly the gradient decreases
+        double distance_scale = 1000.0;  // Adjust to control how quickly the gradient decreases
 
         // Apply the gradient as before
         int num_voxels = microenvironment.number_of_voxels();

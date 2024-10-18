@@ -348,7 +348,7 @@ void setup_tissue( void )
             
             // Initilaize cell properties:
             prey_initialize_properties(cell);
-            initialize_cell_network((cell), 4, 11, 2); // Example sizes: 3 inputs, 5 hidden neurons, 2 outputs
+            initialize_cell_network((cell), 4, 11, 3); // Example sizes: 3 inputs, 5 hidden neurons, 2 outputs
         }
     
         
@@ -450,6 +450,8 @@ void prey_phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
     // Interpret outputs and update custom data:
     pCell->custom_data["separate"] = (outputs[0] > 0.5) ? 1.0 : 0.0;
     pCell->custom_data["divide"] = (outputs[1] > 0.5) ? 1.0 : 0.0;
+//    pCell -> cell_defaults.functions.update_migration_bias = NULL;
+    phenotype.motility.migration_bias = outputs[2];
 
     
     // Division
