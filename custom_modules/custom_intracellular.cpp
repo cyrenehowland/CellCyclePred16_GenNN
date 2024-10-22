@@ -134,18 +134,18 @@ void NeuralNetworkIntracellular::update(PhysiCell::Cell* cell, PhysiCell::Phenot
     auto inputs = get_cell_inputs(cell);
     // compute output of neural network based on inputs
     auto outputs = forward(inputs);
-    // checks if the first output exceeds threshold
-    if (outputs[0] > 0.5) {
-        cell->custom_data["separate"] = 1.0;
-    } else {
-        cell->custom_data["separate"] = 0.0;
-    }
-    // checks if second output exceeds threshold
-    if (outputs[1] > 0.5) {
-        cell->custom_data["divide"] = 1.0;
-    } else {
-        cell->custom_data["divide"] = 0.0;
-    }
+//    // checks if the first output exceeds threshold
+//    if (outputs[0] > 0.5) {
+//        cell->custom_data["separate"] = 1.0;
+//    } else {
+//        cell->custom_data["separate"] = 0.0;
+//    }
+//    // checks if second output exceeds threshold
+//    if (outputs[1] > 0.5) {
+//        cell->custom_data["divide"] = 1.0;
+//    } else {
+//        cell->custom_data["divide"] = 0.0;
+//    }
 }
 
 

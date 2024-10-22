@@ -231,6 +231,21 @@ void initialize_cell_network(Cell* cell, int input_size, int hidden_size, int ou
     nn->initialize_random(cell->ID);
     nn -> print_weights(); // Print weights after initialization
     
+    // Initialize custom_data for inputs and outputs
+    for (size_t i = 0; i < input_size; ++i) {
+        std::string input_var_name = "input_" + std::to_string(i);
+        cell->custom_data.add_variable(input_var_name, "input " + std::to_string(i), 0.0);
+        std::cout << "Added custom data variable: " << input_var_name << " to cell " << cell->ID << std::endl;
+
+    }
+
+    for (size_t i = 0; i < output_size; ++i) {
+        std::string output_var_name = "output_" + std::to_string(i);
+        cell->custom_data.add_variable(output_var_name, "output " + std::to_string(i), 0.0);
+        std::cout << "Added custom data variable: " << output_var_name << " to cell " << cell->ID << std::endl;
+
+    }
+    
 }
 
 std::vector<double> get_cell_inputs(Cell* cell) {
@@ -238,12 +253,12 @@ std::vector<double> get_cell_inputs(Cell* cell) {
     // Smooth out inputs:
     
     // Parameters for Hill function for danger
-    double half_max_danger = 10.0;  // Half-maximal concentration
-    double hill_pow_danger = 2.0;  // Hill power
+//    double half_max_danger = 10.0;  // Half-maximal concentration
+//    double hill_pow_danger = 2.0;  // Hill power
     // Apply Hill function to calculate pred_stress from danger level
-    double danger = cell->custom_data["danger"];
+//    double danger = cell->custom_data["danger"];
 //    std::cout << "Cell ID (" << cell->ID << ") has danger = " << danger << std::endl;
-    cell->custom_data["pred_stress"] = Hill_response_function(danger, half_max_danger, hill_pow_danger);
+//    cell->custom_data["pred_stress"] = Hill_response_function(danger, half_max_danger, hill_pow_danger);
 //    std::cout << "Cell ID (" << cell->ID << ") has pred stress = " << cell->custom_data["pred_stress"] << std::endl;
 
     
@@ -256,12 +271,17 @@ std::vector<double> get_cell_inputs(Cell* cell) {
 
     double nutrient = cell->nearest_density_vector()[0];
 //    std::cout << "Cell ID (" << cell->ID << ") has nutrient = " << nutrient << std::endl;
+    bool day = false;
     
-    
+    if (nutrient > 0){day = true;}
+    else {day = false;}
     
     // Make volume into a multiple of initial_volume
     double initial_volume = cell -> custom_data["initial_volume"];
     double volume_multiple = cell->phenotype.volume.total / initial_volume;
+    
+    
+    double age = (cell -> custom_data["time_since_last_division"])/5000;
     
     // Reserve space for 7 inputs to avoid reallocations
     std::vector<double> inputs;
@@ -269,11 +289,14 @@ std::vector<double> get_cell_inputs(Cell* cell) {
     
     // Now add the inputs
     inputs.push_back(nutrient);
+    inputs.push_back(day);
     inputs.push_back(volume_multiple);
     inputs.push_back(hill_energy);
+    inputs.push_back(age);
+    
 //    inputs.push_back(cell->custom_data["danger"]);
 //    inputs.push_back(cell->custom_data["pred_stress"]);
-    inputs.push_back(cell -> custom_data["time_since_last_division"]);
+
 //    inputs.push_back(cell -> custom_data["time_spent_attached"]);
     
     return inputs;
@@ -348,7 +371,7 @@ void setup_tissue( void )
             
             // Initilaize cell properties:
             prey_initialize_properties(cell);
-            initialize_cell_network((cell), 4, 11, 3); // Example sizes: 3 inputs, 5 hidden neurons, 2 outputs
+            initialize_cell_network((cell), 5, 11, 2); // Example sizes: 3 inputs, 5 hidden neurons, 2 outputs
         }
     
         
@@ -381,7 +404,7 @@ std::vector<std::string> my_coloring_function( Cell* pCell )
 void evaluate_death_conditions(Cell* pCell, Phenotype& phenotype, double dt){
     
     // Death based on starvation:
-    if( pCell->custom_data["energy"] < 1.0 )
+    if( pCell->custom_data["energy"] < 15.0 )
     {
         pCell->lyse_cell();
         return;
@@ -391,7 +414,7 @@ void evaluate_death_conditions(Cell* pCell, Phenotype& phenotype, double dt){
     // Death based on size constraint (if too small or too big, die)
     double initial_volume = pCell->custom_data["initial_volume"];
     double current_volume = pCell->phenotype.volume.total;
-    if (current_volume < initial_volume || current_volume > 30 * initial_volume)
+    if (current_volume < initial_volume || current_volume > 20 * initial_volume)
     {
         pCell->lyse_cell();
         return;
@@ -399,7 +422,7 @@ void evaluate_death_conditions(Cell* pCell, Phenotype& phenotype, double dt){
     
     
     // Death based on time since last division:
-    if (pCell -> custom_data["time_since_last_division"] > 7000){
+    if (pCell -> custom_data["time_since_last_division"] > 5000){
 //        std::cout << "Cell ID (" << pCell->ID << ") Will die now. Its been too long since last division" << std::endl;
         pCell->lyse_cell();
         return;
@@ -433,6 +456,20 @@ void prey_phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
     auto inputs = get_cell_inputs(pCell);
     auto outputs = static_cast<NeuralNetworkIntracellular*>(pCell->phenotype.intracellular)->forward(inputs);
     
+    // Save inputs to custom_data
+    for (size_t i = 0; i < inputs.size(); ++i) {
+        pCell->custom_data["input_" + std::to_string(i)] = inputs[i];
+//        std::cout << "Cell " << pCell->ID << " updated input_" << i << " to: " << inputs[i] << std::endl;
+
+    }
+    
+    // Save outputs to custom_data
+    for (size_t i = 0; i < outputs.size(); ++i) {
+        pCell->custom_data["output_" + std::to_string(i)] = outputs[i];
+//        std::cout << "Cell " << pCell->ID << " updated output_" << i << " to: " << outputs[i] << std::endl;
+
+    }
+    
 ////     Print inputs and outputs for debugging
 //    std::cout << "Cell " << pCell->ID << " Inputs: ";
 //    for (double input : inputs) {
@@ -448,10 +485,12 @@ void prey_phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
 
     
     // Interpret outputs and update custom data:
-    pCell->custom_data["separate"] = (outputs[0] > 0.5) ? 1.0 : 0.0;
-    pCell->custom_data["divide"] = (outputs[1] > 0.5) ? 1.0 : 0.0;
+//    pCell->custom_data["separate"] = (outputs[0] > 0.5) ? 1.0 : 0.0;
+    pCell->custom_data["separate"] = 1.0;
+    pCell->custom_data["divide"] = (outputs[0] > 0.5) ? 1.0 : 0.0;
+    pCell -> phenotype.motility.migration_speed = 2*outputs[1];
 //    pCell -> cell_defaults.functions.update_migration_bias = NULL;
-    phenotype.motility.migration_bias = outputs[2];
+//    pCell -> phenotype.motility.migration_bias = outputs[1];
 
     
     // Division
@@ -506,9 +545,10 @@ void prey_phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
  
 void inactive_prey_growth_and_metabolism(Cell* pCell, Phenotype& phenotype, double dt)
 {
+    
     // Update Energy:
     // No food consumption or growth posible but lower metabolic rate
-    static double metabolic_rate = pCell -> custom_data["inactive_metabolic_rate"];
+    static double metabolic_rate = pCell -> custom_data["active_metabolic_rate"];
     pCell->custom_data["energy"] /= (1.0 + dt*metabolic_rate);
     
 }

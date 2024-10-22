@@ -14,7 +14,7 @@
     </domain>
 
     <overall>
-        <max_time units="min">2000000.0</max_time>
+        <max_time units="min">240000.0</max_time>
         <time_units>min</time_units>
         <space_units>micron</space_units>
         <dt_diffusion units="min">0.01</dt_diffusion>
@@ -23,17 +23,17 @@
     </overall>
 
     <parallel>
-        <omp_num_threads>4</omp_num_threads>
+        <omp_num_threads>8</omp_num_threads>
     </parallel>
 
     <save>
-        <folder>user_projects/CellCyclePred16_GenNN/output/15102024_1630</folder>
+        <folder>user_projects/CellCyclePred16_GenNN/output/Trials/600on600off_22102024</folder>
         <full_data>
-            <interval units="min">10</interval>
+            <interval units="min">60</interval>
             <enable>true</enable>
         </full_data>
         <SVG>
-            <interval units="min">10</interval>
+            <interval units="min">60</interval>
             <enable>true</enable>
             <plot_substrate enabled="false" limits="false">
                 <substrate>food</substrate>
@@ -140,8 +140,8 @@
                         <cell_adhesion_affinity name="Predator">0</cell_adhesion_affinity>
                     </cell_adhesion_affinities>
                     <options>
-                        <set_relative_equilibrium_distance enabled="false" units="dimensionless">1.8</set_relative_equilibrium_distance>
-                        <set_absolute_equilibrium_distance enabled="false" units="micron">15.12</set_absolute_equilibrium_distance>
+                        <set_relative_equilibrium_distance enabled="false" units="dimensionless">40</set_relative_equilibrium_distance>
+                        <set_absolute_equilibrium_distance enabled="false" units="micron">40</set_absolute_equilibrium_distance>
                     </options>
                     <attachment_elastic_constant units="1/min">1.0</attachment_elastic_constant>
                     <attachment_rate units="1/min">0.0</attachment_rate>
@@ -221,8 +221,8 @@
                 <time_since_last_division conserved="false" units="" description="">0.0</time_since_last_division>
                 <attachment_loss_time conserved="false" units="" description="">0.0</attachment_loss_time>
                 <time_spent_attached conserved="false" units="" description="">0.0</time_spent_attached>
-                <active_metabolic_rate conserved="false" units="" description="">0.0025</active_metabolic_rate>
-                <inactive_metabolic_rate conserved="false" units="" description="">0.001</inactive_metabolic_rate>
+                <active_metabolic_rate conserved="false" units="" description="">0.003</active_metabolic_rate>
+                <inactive_metabolic_rate conserved="false" units="" description="">0.0015</inactive_metabolic_rate>
             </custom_data>
         </cell_definition>
         <cell_definition name="Predator" ID="1">
