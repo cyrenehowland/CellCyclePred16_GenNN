@@ -349,17 +349,14 @@ void setup_tissue( void )
         // Check if the current cell is a default cell
         if (cell->type == find_cell_definition("Cell")->type){
             
+//            int num_hidden_neurons = parameters.ints("num_hidden_neurons");
+
             // Initilaize cell properties:
             prey_initialize_properties(cell);
-            initialize_cell_network((cell), 5, 11, 2); // Example sizes: 3 inputs, 5 hidden neurons, 2 outputs
+            initialize_cell_network((cell), 5, num_hidden_neurons, 2); // Example sizes: 3 inputs, 5 hidden neurons, 2 outputs
         }
     
         
-        if (cell->type == find_cell_definition("Predator")->type){
-            
-            // Initilaize cell properties:
-            pred_initialize_properties(cell);
-        }
     }
 	
 	return; 
