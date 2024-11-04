@@ -403,7 +403,7 @@ int main( int argc, char* argv[] )
 			// update the microenvironment
 			microenvironment.simulate_diffusion_decay( diffusion_dt );
             
-            toggle_sunlight_gradient(PhysiCell_globals.current_time, 600, 600);
+            toggle_sunlight_gradient(PhysiCell_globals.current_time, 400, 400);
 
 			
             // Add food randomly into arena periodically
