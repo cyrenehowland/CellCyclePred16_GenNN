@@ -196,23 +196,16 @@ void prey_initialize_properties(Cell* cell){
     cell -> custom_data["initial_volume"] = cell -> phenotype.volume.total;
     cell -> custom_data["energy"] = 25;
     cell -> phenotype.motility.is_motile = true;
-    cell -> custom_data["pred_stress"] = 0;
-    cell -> custom_data["danger"] = 0;
-//    cell -> custom_data["attachment_loss_time"]= -1.0;
-    
-//    std::cout << "Cell " << cell->ID << " , INITIALIZED AND attachment loss time  = " << cell->custom_data["attachment_loss_time"] << std::endl;
-    
-    
 }
 
-void pred_initialize_properties(Cell* cell){
-    cell -> custom_data["initial_volume"] = cell -> phenotype.volume.total;
-    cell -> custom_data["energy"] = 10;
-    cell -> phenotype.motility.is_motile = true;
-    cell -> custom_data["edible"] = -1.0;
-
-}
-
+//void pred_initialize_properties(Cell* cell){
+//    cell -> custom_data["initial_volume"] = cell -> phenotype.volume.total;
+//    cell -> custom_data["energy"] = 10;
+//    cell -> phenotype.motility.is_motile = true;
+//    cell -> custom_data["edible"] = -1.0;
+//
+//}
+//
 
 
 void initialize_cell_network(Cell* cell, int input_size, int hidden_size, int output_size) {
@@ -517,8 +510,6 @@ void prey_phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
         pCell -> remove_all_attached_cells();
     }
 
-
-
     // Death evaluation
     evaluate_death_conditions(pCell, phenotype, dt);
     
@@ -622,55 +613,3 @@ void contact_function( Cell* pMe, Phenotype& phenoMe , Cell* pOther, Phenotype& 
 { return; } 
 
     
-////// *********************************************************************************************
-////// *********************************************************************************************
-////// PREDATOR FUNCTONS
-////// *********************************************************************************************
-////// *********************************************************************************************
-////
-//void pred_phenotype_function( Cell* pCell, Phenotype& phenotype, double dt ){
-//    
-//    
-//    // Hunt and eat prey cells (and increase energy)
-//    pred_hunt_function(pCell, phenotype, dt);
-//    
-//    // Update energy based on metabolism
-//    static double metabolic_rate = pCell -> custom_data["metabolic_rate"];
-//    pCell->custom_data["energy"] /= (1.0 + dt*metabolic_rate);
-//    
-//    
-////    // Death based on starvation
-////    if( pCell->custom_data["energy"] < 1.0 )
-////    {
-////        pCell->lyse_cell();
-//////        std::cout << "Predator Cell " << pCell->ID << ": Is dying" << std::endl;
-////        
-////    }
-//}
-////
-//void pred_hunt_function( Cell* pCell, Phenotype& phenotype, double dt ){
-//    static Cell_Definition* pPreyDef = find_cell_definition( "Cell" );
-//    static Cell_Definition* pPredDef = find_cell_definition( "Predator" );
-//    
-//    bool is_hungry = (pCell->custom_data["energy"] < 800);
-//    double ingest_probability = pCell -> custom_data["prey_ingest_prob"];
-//    
-//    for( int n=0; n < pCell->state.neighbors.size(); n++ )
-//    {
-//        Cell* nbr = pCell->state.neighbors[n];
-//        
-//        if( nbr->type == pPreyDef->type && nbr->custom_data["edible"] == true && is_hungry ){
-//            
-//            double random_number = UniformRandom(); // Generate a random number between 0 and 1
-//            
-//            if (random_number < ingest_probability) {
-//                pCell -> ingest_cell(nbr);
-//                pCell -> custom_data["energy"] +=10;
-//                
-//                is_hungry = (pCell->custom_data["energy"] < 800);  // Re-evaluate hunger in case the condition changes due to energy increase
-//            }
-//        }
-//    }
-//}
-//
-
